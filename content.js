@@ -213,6 +213,9 @@
   }
 
   function fmt(n) {
+    return n.toFixed(2);
+  }
+  function fmtOrig(n) {
     return n.toFixed(1);
   }
 
@@ -221,7 +224,7 @@
     badge.setAttribute(BADGE_ATTR, "1");
     badge.className = "fair-rating-badge";
 
-    const sameLowHigh = Math.abs(adjusted.low - adjusted.high) < 0.05;
+    const sameLowHigh = Math.abs(adjusted.low - adjusted.high) < 0.005;
     const valueText = sameLowHigh
       ? fmt(adjusted.low)
       : `${fmt(adjusted.high)}–${fmt(adjusted.low)}`;
@@ -229,8 +232,8 @@
     const deltaLow = ctx.rating - adjusted.low;
     const deltaHigh = ctx.rating - adjusted.high;
     const deltaText = sameLowHigh
-      ? `−${deltaLow.toFixed(1)}`
-      : `−${deltaHigh.toFixed(1)} to −${deltaLow.toFixed(1)}`;
+      ? `−${deltaLow.toFixed(2)}`
+      : `−${deltaHigh.toFixed(2)} to −${deltaLow.toFixed(2)}`;
 
     const starWord =
       settings.assumedStar === 0
@@ -252,7 +255,7 @@
       <div class="fair-rating-sub">
         If the ${removedLabel} removed review${removed.hi === 1 ? "" : "s"} had
         been left up as ${starWord}s, this business's rating would drop from
-        <b>${fmt(ctx.rating)}</b> to roughly
+        <b>${fmtOrig(ctx.rating)}</b> to roughly
         <b>${valueText}</b>.
       </div>
       <div class="fair-rating-foot">

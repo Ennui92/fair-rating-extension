@@ -2,7 +2,11 @@
 
 A tiny Chrome extension that shows you the **real** rating of a business on Google Maps after accounting for reviews that were removed under German defamation law.
 
-![example badge](docs/screenshot.png)
+<p align="center">
+  <img src="docs/screenshot.png" alt="Fair Rating badge appearing under Google Maps' defamation-removal banner" width="480" />
+</p>
+
+<p align="center"><i>Example on a Berlin business — Google Maps UI language set to Greek.<br/>Works across all supported languages (see below).</i></p>
 
 ## Why does this exist?
 

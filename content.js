@@ -160,13 +160,29 @@
   }
 
   function parseTotal(text) {
+    // Find ALL "N review-word" matches and pick the largest — Google caps the
+    // removal range at 250, but a business with a defamation banner typically
+    // has thousands of real reviews. Picking the largest avoids grabbing
+    // numbers from inside the banner itself (e.g. "11 to 20 αξιολογήσεις").
+    const globalRegex = new RegExp(
+      `([\\d.,\\s\\u00a0]+?)\\s*(?:${REVIEW_WORDS_ALT})`,
+      "gi"
+    );
+    let best = 0;
+    let m;
+    while ((m = globalRegex.exec(text)) !== null) {
+      const raw = m[1].replace(/[\s\u00a0.,]/g, "");
+      const n = parseInt(raw, 10);
+      if (Number.isFinite(n) && n > best) best = n;
+    }
+    if (best > 0) return best;
     const paren = text.match(TOTAL_PAREN_REGEX);
-    const word = text.match(TOTAL_REGEX);
-    const pick = word || paren;
-    if (!pick) return null;
-    const raw = pick[1].replace(/[\s\u00a0.,]/g, "");
-    const n = parseInt(raw, 10);
-    return Number.isFinite(n) && n > 0 ? n : null;
+    if (paren) {
+      const raw = paren[1].replace(/[\s\u00a0.,]/g, "");
+      const n = parseInt(raw, 10);
+      if (Number.isFinite(n) && n > 0) return n;
+    }
+    return null;
   }
 
   function findRatingContext(bannerEl) {

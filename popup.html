@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Fair Rating</title>
+    <style>
+      body {
+        font-family: Roboto, Arial, sans-serif;
+        width: 280px;
+        margin: 0;
+        padding: 14px 16px;
+        color: #1f2937;
+      }
+      h1 {
+        font-size: 14px;
+        margin: 0 0 8px;
+      }
+      p {
+        font-size: 12px;
+        color: #4b5563;
+        margin: 0 0 10px;
+      }
+      label {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+      select {
+        width: 100%;
+        padding: 6px 8px;
+        font-size: 13px;
+      }
+      .hint {
+        font-size: 11px;
+        color: #6b7280;
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Fair Rating</h1>
+    <p>
+      For businesses that removed reviews via German defamation law, recalculate
+      the rating as if those reviews had stayed.
+    </p>
+    <label>
+      Assume removed reviews were:
+      <select id="assumedStar">
+        <option value="1">1 star (worst case on Google's scale)</option>
+        <option value="0">0 stars (most punitive)</option>
+        <option value="2">2 stars</option>
+        <option value="3">3 stars (neutral)</option>
+      </select>
+    </label>
+    <div class="hint">Changes apply on the next page update.</div>
+    <script src="popup.js"></script>
+  </body>
+</html>

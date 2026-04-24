@@ -1,0 +1,119 @@
+.fair-rating-badge {
+  margin: 14px 0;
+  padding: 16px 18px 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ffffff 0%, #fef9f0 100%);
+  border: 1px solid #fde68a;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px -12px rgba(245, 158, 11, 0.25);
+  color: #0f172a;
+  font-family: "Google Sans", Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  max-width: 560px;
+  position: relative;
+  overflow: hidden;
+}
+
+.fair-rating-badge::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+}
+
+.fair-rating-badge .fair-rating-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.fair-rating-badge .fair-rating-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #92400e;
+  background: #fef3c7;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.fair-rating-badge .fair-rating-pill-icon {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+}
+
+.fair-rating-badge .fair-rating-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.fair-rating-badge .fair-rating-value {
+  font-size: 28px;
+  font-weight: 600;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.fair-rating-badge .fair-rating-star {
+  color: #f59e0b;
+  font-size: 22px;
+}
+
+.fair-rating-badge .fair-rating-delta {
+  font-size: 12px;
+  color: #92400e;
+  font-weight: 600;
+  background: #fef3c7;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.fair-rating-badge .fair-rating-sub {
+  color: #334155;
+  margin-bottom: 10px;
+}
+
+.fair-rating-badge .fair-rating-sub b {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.fair-rating-badge .fair-rating-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: center;
+  font-size: 11px;
+  color: #64748b;
+  padding-top: 10px;
+  border-top: 1px solid #fde68a;
+}
+
+.fair-rating-badge .fair-rating-foot a {
+  color: #475569;
+  text-decoration: none;
+  border-bottom: 1px dotted #94a3b8;
+}
+
+.fair-rating-badge .fair-rating-foot a:hover {
+  color: #0f172a;
+  border-bottom-color: #475569;
+}
+
+.fair-rating-badge .fair-rating-dot {
+  color: #cbd5e1;
+}

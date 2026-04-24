@@ -117,13 +117,18 @@
       const lo = parseInt(r[1], 10);
       const hi = parseInt(r[2], 10);
       if (Number.isFinite(lo) && Number.isFinite(hi) && lo <= hi && hi <= 100000) {
-        return { lo, hi };
+        return { lo, hi, capped: false };
       }
     }
     const s = text.match(SINGLE_REGEX);
     if (s) {
       const n = parseInt(s[1], 10);
-      if (Number.isFinite(n)) return { lo: n, hi: n };
+      if (Number.isFinite(n)) {
+        // Google's banner caps at a bucket like "more than 250". When only
+        // one number appears and it's >= 250, treat this as the capped case.
+        const capped = n >= 250;
+        return { lo: n, hi: n, capped };
+      }
     }
     return null;
   }
@@ -212,11 +217,16 @@
     };
   }
 
+  // Floor to 1 decimal — never overstate the adjusted rating.
   function fmt(n) {
-    return n.toFixed(2);
+    return (Math.floor(n * 10) / 10).toFixed(1);
   }
   function fmtOrig(n) {
     return n.toFixed(1);
+  }
+  // Delta uses 2 decimals so small drops are visible.
+  function fmtDelta(n) {
+    return n.toFixed(2);
   }
 
   function buildBadge(ctx, removed, adjusted) {
@@ -240,8 +250,12 @@
         ? "0-star"
         : `${settings.assumedStar}-star`;
 
-    const removedLabel =
-      removed.lo === removed.hi ? `${removed.lo}` : `${removed.lo}–${removed.hi}`;
+    const displayHi = removed.effectiveHi ?? removed.hi;
+    const removedLabel = removed.capped
+      ? `${removed.lo}+ (extrapolated to ~${displayHi})`
+      : removed.lo === removed.hi
+      ? `${removed.lo}`
+      : `${removed.lo}–${removed.hi}`;
 
     badge.innerHTML = `
       <div class="fair-rating-header">
@@ -281,11 +295,20 @@
 
     if (ctx.container.querySelector(`[${BADGE_ATTR}]`)) return;
 
+    // When the banner is capped ("more than 250"), scale the upper bound
+    // proportionally to the business's total reviews — the real count is
+    // unknown but likely larger on bigger businesses. Floor: 2× the cap.
+    let effectiveHi = removed.hi;
+    if (removed.capped) {
+      effectiveHi = Math.max(removed.lo * 2, Math.round(ctx.total * 0.05));
+      removed.effectiveHi = effectiveHi;
+    }
+
     const adjusted = computeAdjusted(
       ctx.rating,
       ctx.total,
       removed.lo,
-      removed.hi,
+      effectiveHi,
       settings.assumedStar
     );
 

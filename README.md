@@ -3,26 +3,30 @@
 A tiny Chrome extension that shows you the **real** rating of a business on Google Maps after accounting for reviews that were removed under German defamation law.
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="Fair Rating badge appearing under Google Maps' defamation-removal banner" width="480" />
+  <img src="docs/screenshot.png" alt="Fair Rating badge appearing under Google Maps' defamation-removal banner" width="720" />
 </p>
 
-<p align="center"><i>Example on a Berlin business — Google Maps UI language set to Greek.<br/>Works across all supported languages (see below).</i></p>
+<p align="center">
+  <a href="https://ennui92.github.io/fair-rating-extension/">Website</a> ·
+  <a href="https://ennui92.github.io/fair-rating-extension/privacy.html">Privacy policy</a> ·
+  <a href="https://github.com/Ennui92/fair-rating-extension/issues">Report an issue</a>
+</p>
 
 ## Why does this exist?
 
 In Germany, businesses can file defamation complaints to get negative Google reviews removed. Some use this aggressively — dozens or hundreds of critical reviews get wiped, and their star rating stays artificially high.
 
-Google recently started displaying a banner like **"21 to 50 reviews removed due to defamation complaints"** on affected businesses — but the visible star rating doesn't change. This extension fixes that: it reads the banner, treats every removed review as a 1-star rating (configurable), and shows you the adjusted rating.
+Google recently started displaying a notice like **"21 to 50 reviews removed due to defamation complaints"** on affected businesses — but the visible star rating doesn't change. This extension fixes that: it reads the notice, treats every removed review as a 1-star rating (configurable), and shows you the adjusted rating.
 
-**Example:** A restaurant shows `4.7 ★ (820 reviews)` with `21 to 50 removed`. After adjustment, its real rating is closer to `4.6`. That might not sound like much — but when hundreds of reviews were removed, the drop can be half a star or more.
+**Example:** A restaurant shows `4.8 ★ (431 reviews)` with `11 to 20 removed`. Fair Rating shows its true rating is closer to `4.6–4.7` — a `−0.09 to −0.17` drop. That might not sound like much, but when hundreds of reviews were removed it can mean half a star or more.
 
-Works on Google Maps in ~20 languages (English, German, Greek, Spanish, French, Italian, Portuguese, Dutch, Polish, Russian, Turkish, Japanese, Chinese, and more).
+Works on Google Maps in ~20 languages — English, German, Greek, Spanish, French, Italian, Portuguese, Dutch, Polish, Russian, Turkish, Czech, Swedish, Hungarian, Japanese, Chinese and more.
 
 ---
 
-## How to install (for people who've never installed a Chrome extension manually)
+## Install (for people who've never installed a Chrome extension manually)
 
-We're working on getting this into the Chrome Web Store so you can install it in one click. Until then, it takes ~60 seconds to install manually. Here's every step:
+We're working on getting this into the Chrome Web Store so you can install it in one click. Until then, it takes ~60 seconds to install manually:
 
 ### 1. Download this project
 
@@ -30,7 +34,7 @@ We're working on getting this into the Chrome Web Store so you can install it in
 - Click **Download ZIP**
 - Unzip the file somewhere you'll remember (e.g. your Documents folder)
 
-You should now have a folder called `fair-rating` (or similar) containing `manifest.json`, `content.js`, etc.
+You should now have a folder containing `manifest.json`, `content.js`, etc.
 
 ### 2. Open Chrome's extensions page
 
@@ -40,50 +44,50 @@ You should now have a folder called `fair-rating` (or similar) containing `manif
 ### 3. Turn on Developer mode
 
 - In the top-right of the extensions page, flip the **Developer mode** toggle to ON
-- A new row of buttons appears
 
 ### 4. Load the extension
 
 - Click **Load unpacked** (top-left)
 - Navigate to the folder you unzipped in step 1
 - Select the folder (the one that contains `manifest.json`) and click **Select folder**
-- The extension appears in your list. Done!
 
 ### 5. Try it out
 
-- Open [Google Maps](https://www.google.com/maps)
-- Search for a business that's been in the news for removing reviews (e.g. in Berlin, try "Amrit Friedrichshain" or "Risa Chicken")
+- Open [Google Maps](https://www.google.com/maps) and search for a business that's been in the news for removing reviews (in Berlin: try "Amrit Friedrichshain" or "Risa Chicken")
 - Click the **Reviews** tab
-- You should see an amber **Adjusted rating** card right under the defamation banner
+- You should see an amber **Adjusted rating** card right under the defamation notice
 
-If nothing appears, the business probably hasn't had any reviews removed — which is a good sign for them!
+If nothing appears, the business probably hasn't had any reviews removed — which is a good sign for them.
 
 ---
 
 ## Settings
 
-Click the extension's icon in your browser toolbar (you may need to pin it first — click the puzzle-piece icon and pin "Fair Rating"). A small popup lets you change how harshly removed reviews are counted:
+Click the extension's icon in your browser toolbar (pin it first via the puzzle-piece icon if you don't see it). The popup lets you change how harshly removed reviews are counted:
 
+- **0 stars** — most punitive, matches the original Reddit suggestion
 - **1 star** (default) — worst case within Google's 1–5 scale
-- **0 stars** — most punitive, matches what the original Reddit commenter suggested
 - **2 stars** — mildly negative
-- **3 stars** — neutral / benefit of the doubt
+- **3 stars** — neutral
 
-Changes apply on the next page update.
+Changes apply on the next page refresh.
 
 ---
 
 ## How the math works
 
 ```
-adjusted_rating = (current_rating × total_reviews + assumed_star × removed_count) / (total_reviews + removed_count)
+adjusted_rating = (current_rating × total_reviews + assumed_star × removed) / (total_reviews + removed)
 ```
 
-Google reports removed reviews as a **range** (e.g. "11 to 20"). The badge shows the rating range using both the low and high end of that range. So if you see `~ 4.5–4.6 ★`, that means the real rating is somewhere in that interval, depending on the exact number of removals.
+Google reports removed reviews as a **range** (e.g. "11 to 20"). The badge shows the rating range using both the low and high end of that range. The adjusted rating always floors to 1 decimal, so we never round up in the business's favour.
+
+### Capped banners ("more than 250 reviews removed")
+
+Google caps the disclosed range. When the notice shows the top bucket, the upper bound is estimated as `max(500, total_reviews × 5%)` — small businesses that hit the cap get at least 500, and large businesses get a proportionally larger estimate. The badge labels this clearly as "250+ (extrapolated to ~N)" so the reader knows the number is an estimate, not from Google.
 
 ### Caveats
 
-- Google caps the disclosed range (the highest bucket is "more than 250"), so the real impact on businesses with massive removal counts may be larger than shown.
 - The count only covers the **last 365 days** — if a business has been abusing this for years, the cumulative effect is worse.
 - This is a rough worst-case estimate, not a verified rating.
 
@@ -91,30 +95,36 @@ Google reports removed reviews as a **range** (e.g. "11 to 20"). The badge shows
 
 ## Credits
 
-- **Idea**: [u/LiamPolygami](https://www.reddit.com/user/LiamPolygami/) in [this r/berlin thread](https://www.reddit.com/r/berlin/) — "Someone needs to create an extension that adds 0 ratings for every removed rating and then averages that with the provided rating."
-- **Built by**: [Yet Another Expat](https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD) — a podcast about life abroad. Give it a listen!
+- **Idea**: [u/LiamPolygami](https://www.reddit.com/user/LiamPolygami/) in a [r/berlin thread](https://www.reddit.com/r/berlin/) about Google's new defamation-removal disclosure — *"Someone needs to create an extension that adds 0 ratings for every removed rating and then averages that with the provided rating."*
+- **Built by**: [Yet Another Expat](https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD) — a podcast about life abroad.
 
 ---
 
 ## Roadmap
 
-- [ ] Submit to the Chrome Web Store for one-click install
+- [ ] Chrome Web Store listing (submitted, awaiting review)
 - [ ] Firefox version
-- [ ] Icon / proper branding
-- [ ] Optional: show the adjusted rating inline next to the big number instead of a separate card
+- [ ] Optional inline display (next to the big rating number instead of a separate card)
+- [ ] User-tunable multiplier for historical removals
 
 ---
 
 ## Development
 
-The whole thing is four files:
+The extension is a handful of files:
 
 - `manifest.json` — Manifest V3 extension config
-- `content.js` — finds the defamation banner on Google Maps, parses the rating/total/removed range, injects the adjusted-rating badge
+- `content.js` — finds the defamation notice on Google Maps, parses rating/total/removed, injects the badge
 - `styles.css` — badge styling
-- `popup.html` / `popup.js` — settings popup
+- `popup.html` / `popup.css` / `popup.js` — settings popup
+- `icons/` — toolbar icons at 16, 32, 48, 128 px
+- `icon.svg` — source icon
+- `docs/` — GitHub Pages site (landing page + privacy policy) and promo assets
+- `tools/build-assets.mjs` — generates all PNGs from `icon.svg`
 
-No build step, no dependencies. Edit the files, reload the extension at `chrome://extensions` (hit the circular arrow on the card), refresh your Maps tab.
+No build step for the extension itself. Edit the source files, reload the extension at `chrome://extensions`, refresh the Maps tab.
+
+To regenerate store/promo graphics: `cd tools && node build-assets.mjs`
 
 ## License
 

@@ -1,0 +1,25 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <linearGradient id="starShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#fef3c7" />
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="128" height="128" rx="26" fill="url(#bg)" />
+  <path
+    d="M64 26l9.88 20 22.12 3.22-16 15.6 3.78 22.02L64 76.42l-19.78 10.42L48 64.82l-16-15.6 22.12-3.22L64 26z"
+    fill="url(#starShade)"
+  />
+  <path
+    d="M90 82l-10 10-10-10"
+    stroke="#7c2d12"
+    stroke-width="7"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

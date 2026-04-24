@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fair Rating — Truer Google Maps ratings for German businesses</title>
+    <meta
+      name="description"
+      content="A free Chrome extension that shows the adjusted Google Maps rating of German businesses after accounting for reviews removed under defamation law."
+    />
+    <meta property="og:title" content="Fair Rating" />
+    <meta
+      property="og:description"
+      content="See the true Google Maps rating of any German business."
+    />
+    <meta property="og:image" content="assets/promo-marquee-1400x560.png" />
+    <link rel="icon" href="assets/store-icon-128.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="wrap">
+        <div class="hero-inner">
+          <div class="hero-text">
+            <div class="pill">CHROME EXTENSION</div>
+            <h1>Fair Rating</h1>
+            <p class="tagline">
+              See the true Google Maps rating of any German business.
+            </p>
+            <p class="lead">
+              Some businesses abuse German defamation law to mass-remove
+              critical reviews. Google now shows how many reviews were removed
+              — Fair Rating shows you what the rating would be if they
+              hadn't been.
+            </p>
+            <div class="cta-row">
+              <a class="btn btn-primary" href="https://github.com/Ennui92/fair-rating-extension#install-for-people-whove-never-installed-a-chrome-extension-manually">Install (manual)</a>
+              <a class="btn btn-ghost" href="https://github.com/Ennui92/fair-rating-extension">View on GitHub</a>
+            </div>
+            <p class="soon">
+              Chrome Web Store listing coming soon — we're waiting on review.
+            </p>
+          </div>
+          <div class="hero-img">
+            <img src="assets/screenshot-1280x800.png" alt="Fair Rating badge on Google Maps showing adjusted rating" />
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="how">
+      <div class="wrap">
+        <h2>How it works</h2>
+        <ol class="steps">
+          <li>
+            <div class="step-num">1</div>
+            <div>
+              <strong>Open a Google Maps business page.</strong> The extension
+              runs on both <code>google.com/maps</code> and
+              <code>google.de/maps</code>.
+            </div>
+          </li>
+          <li>
+            <div class="step-num">2</div>
+            <div>
+              <strong>Click the Reviews tab.</strong> If Google has removed
+              reviews for that business under defamation law, a notice appears
+              ("11 to 20 reviews removed due to defamation complaints").
+            </div>
+          </li>
+          <li>
+            <div class="step-num">3</div>
+            <div>
+              <strong>Read the adjusted rating.</strong> Fair Rating calculates
+              what the star rating would be if the removed reviews had been
+              left up — counted as 1-star votes by default (configurable).
+            </div>
+          </li>
+        </ol>
+        <div class="formula">
+          <div class="formula-label">The math</div>
+          <code>adjusted = (rating × total + assumed_star × removed) / (total + removed)</code>
+          <p class="formula-note">
+            For capped banners ("more than 250"), the upper bound is estimated
+            as <code>max(500, total × 5%)</code> so large businesses don't get
+            a free pass.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="langs">
+      <div class="wrap">
+        <h2>Works in ~20 languages</h2>
+        <p>
+          Detection is keyword-based, so it works whenever Google shows the
+          defamation notice, regardless of browser language:
+        </p>
+        <div class="lang-grid">
+          <span>English</span>
+          <span>Deutsch</span>
+          <span>Ελληνικά</span>
+          <span>Español</span>
+          <span>Français</span>
+          <span>Italiano</span>
+          <span>Português</span>
+          <span>Nederlands</span>
+          <span>Polski</span>
+          <span>Русский</span>
+          <span>Türkçe</span>
+          <span>Čeština</span>
+          <span>Svenska</span>
+          <span>Magyar</span>
+          <span>日本語</span>
+          <span>中文</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="privacy-teaser">
+      <div class="wrap">
+        <h2>Zero tracking</h2>
+        <p>
+          Fair Rating reads the rating data directly from the Google Maps page
+          in your browser. It doesn't send anything anywhere. No analytics,
+          no servers, no accounts. Your preference (assumed star value) is
+          stored locally in Chrome.
+        </p>
+        <a class="btn btn-ghost" href="privacy.html">Read the full privacy policy →</a>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="foot-row">
+          <div>
+            <strong>Fair Rating</strong>
+            <span class="dot">·</span>
+            <a href="https://github.com/Ennui92/fair-rating-extension">GitHub</a>
+            <span class="dot">·</span>
+            <a href="privacy.html">Privacy</a>
+            <span class="dot">·</span>
+            <a href="https://github.com/Ennui92/fair-rating-extension/issues">Report an issue</a>
+          </div>
+          <div class="credits">
+            Idea by
+            <a href="https://www.reddit.com/user/LiamPolygami/">u/LiamPolygami</a>
+            on r/berlin
+            <span class="dot">·</span>
+            Built by
+            <a href="https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD">Yet Another Expat</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

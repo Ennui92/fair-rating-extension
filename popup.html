@@ -3,56 +3,91 @@
   <head>
     <meta charset="utf-8" />
     <title>Fair Rating</title>
-    <style>
-      body {
-        font-family: Roboto, Arial, sans-serif;
-        width: 280px;
-        margin: 0;
-        padding: 14px 16px;
-        color: #1f2937;
-      }
-      h1 {
-        font-size: 14px;
-        margin: 0 0 8px;
-      }
-      p {
-        font-size: 12px;
-        color: #4b5563;
-        margin: 0 0 10px;
-      }
-      label {
-        display: block;
-        font-size: 12px;
-        margin-bottom: 8px;
-      }
-      select {
-        width: 100%;
-        padding: 6px 8px;
-        font-size: 13px;
-      }
-      .hint {
-        font-size: 11px;
-        color: #6b7280;
-        margin-top: 8px;
-      }
-    </style>
+    <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <h1>Fair Rating</h1>
-    <p>
-      For businesses that removed reviews via German defamation law, recalculate
-      the rating as if those reviews had stayed.
-    </p>
-    <label>
-      Assume removed reviews were:
-      <select id="assumedStar">
-        <option value="1">1 star (worst case on Google's scale)</option>
-        <option value="0">0 stars (most punitive)</option>
+    <header class="hdr">
+      <div class="hdr-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="36" height="36">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#fbbf24" />
+              <stop offset="100%" stop-color="#d97706" />
+            </linearGradient>
+          </defs>
+          <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#g)" />
+          <path
+            d="M24 11l3.71 7.52 8.29 1.2-6 5.85 1.42 8.27L24 29.94l-7.42 3.9L18 25.57l-6-5.85 8.29-1.2L24 11z"
+            fill="#fff"
+          />
+          <path
+            d="M34 30l-4 4-4-4"
+            stroke="#7c2d12"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            fill="none"
+          />
+        </svg>
+      </div>
+      <div class="hdr-text">
+        <h1>Fair Rating</h1>
+        <p>Truer Google Maps ratings for German businesses.</p>
+      </div>
+    </header>
+
+    <section class="where">
+      <div class="where-step">
+        <span class="where-num">1</span>
+        <span>Open a Google Maps business page</span>
+      </div>
+      <div class="where-step">
+        <span class="where-num">2</span>
+        <span>Click the <b>Reviews</b> tab</span>
+      </div>
+      <div class="where-step">
+        <span class="where-num">3</span>
+        <span>If any reviews were removed, the adjusted rating appears under the notice</span>
+      </div>
+    </section>
+
+    <section class="settings">
+      <label class="settings-label" for="assumedStar">
+        Count each removed review as
+      </label>
+      <select id="assumedStar" class="settings-select">
+        <option value="0">0 stars · most punitive</option>
+        <option value="1">1 star · worst case on Google's scale</option>
         <option value="2">2 stars</option>
-        <option value="3">3 stars (neutral)</option>
+        <option value="3">3 stars · neutral</option>
       </select>
-    </label>
-    <div class="hint">Changes apply on the next page update.</div>
+      <p class="settings-hint">
+        Lower = harsher adjustment. Changes apply on the next page update.
+      </p>
+    </section>
+
+    <footer class="ftr">
+      <a
+        href="https://github.com/Ennui92/fair-rating-extension"
+        target="_blank"
+        rel="noopener noreferrer"
+        >GitHub</a
+      >
+      <span class="ftr-dot">·</span>
+      <a
+        href="https://github.com/Ennui92/fair-rating-extension#readme"
+        target="_blank"
+        rel="noopener noreferrer"
+        >How it works</a
+      >
+      <span class="ftr-dot">·</span>
+      <a
+        href="https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Yet Another Expat</a
+      >
+    </footer>
     <script src="popup.js"></script>
   </body>
 </html>

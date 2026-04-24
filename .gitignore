@@ -1,6 +1,8 @@
 .DS_Store
 Thumbs.db
 node_modules/
+tools/node_modules/
+tools/package-lock.json
 *.zip
 .vscode/
 .idea/

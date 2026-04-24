@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Policy — Fair Rating</title>
+    <meta
+      name="description"
+      content="Privacy policy for the Fair Rating Chrome extension."
+    />
+    <link rel="icon" href="assets/store-icon-128.png" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .privacy-doc {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 64px 24px;
+      }
+      .privacy-doc h1 {
+        font-size: 42px;
+        font-weight: 800;
+        margin: 0 0 8px;
+        letter-spacing: -0.01em;
+      }
+      .privacy-doc h2 {
+        font-size: 22px;
+        margin: 40px 0 12px;
+      }
+      .privacy-doc p,
+      .privacy-doc li {
+        color: #334155;
+        line-height: 1.7;
+      }
+      .privacy-doc ul {
+        padding-left: 22px;
+      }
+      .privacy-doc .updated {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 32px;
+      }
+      .backlink {
+        display: inline-block;
+        margin-bottom: 24px;
+        color: #92400e;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .backlink:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="privacy-doc">
+      <a class="backlink" href="index.html">← Back to Fair Rating</a>
+      <h1>Privacy Policy</h1>
+      <p class="updated">Last updated: April 24, 2026</p>
+
+      <p>
+        Fair Rating ("the extension") is a browser extension that adjusts the
+        displayed rating of businesses on Google Maps to account for reviews
+        removed under German defamation law. This page explains exactly what
+        data the extension handles.
+      </p>
+
+      <h2>What data we collect</h2>
+      <p><strong>None.</strong> The extension does not collect, transmit, or store any personal data, browsing history, identifiers, or analytics of any kind.</p>
+
+      <h2>What data we process locally</h2>
+      <p>While you are on a Google Maps page, the extension reads the following information from the page you are currently viewing, in your browser only:</p>
+      <ul>
+        <li>The business's current star rating (e.g. "4.8")</li>
+        <li>The business's total number of reviews (e.g. "431 reviews")</li>
+        <li>The text of the "reviews removed due to defamation complaints" notice, if present</li>
+      </ul>
+      <p>This data never leaves your device. It is used solely to compute the adjusted rating badge that the extension draws on the page.</p>
+
+      <h2>What we store locally</h2>
+      <p>The extension uses the <code>chrome.storage.sync</code> API to save one preference: the assumed star value for removed reviews (0, 1, 2, or 3). This is stored by Chrome and, if you are signed in to Chrome, synced across your own devices. It is never transmitted to us or to any third party.</p>
+
+      <h2>What we do NOT do</h2>
+      <ul>
+        <li>No analytics, no telemetry, no tracking pixels</li>
+        <li>No server — there is no backend of any kind</li>
+        <li>No accounts, no login, no email collection</li>
+        <li>No ads, no third-party SDKs</li>
+        <li>No selling, sharing, or transferring of user data</li>
+        <li>No remote code loading</li>
+      </ul>
+
+      <h2>Permissions</h2>
+      <p>The extension requests the <code>storage</code> permission (to save the assumed-star preference locally) and access to <code>google.com/maps</code>, <code>google.de/maps</code>, and related Google Search pages (to read the rating and inject the adjusted-rating badge on those pages only). It does not run on any other website.</p>
+
+      <h2>Children's privacy</h2>
+      <p>The extension does not knowingly collect any information from anyone, including children under 13.</p>
+
+      <h2>Open source</h2>
+      <p>The extension is open source. You can inspect every line of code at <a href="https://github.com/Ennui92/fair-rating-extension">github.com/Ennui92/fair-rating-extension</a>.</p>
+
+      <h2>Changes to this policy</h2>
+      <p>If this policy changes, the updated version will be posted at this URL and the "last updated" date at the top will be revised. If the extension is ever modified to collect or transmit user data, this policy will be updated before that change is published.</p>
+
+      <h2>Contact</h2>
+      <p>Questions? Open an issue at <a href="https://github.com/Ennui92/fair-rating-extension/issues">github.com/Ennui92/fair-rating-extension/issues</a>.</p>
+    </main>
+  </body>
+</html>

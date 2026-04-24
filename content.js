@@ -62,13 +62,15 @@
   const REVIEW_WORDS_ALT = REVIEW_WORDS
     .map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
     .join("|");
-  // total-count regex: a number (with thousand separators), optional spacing,
-  // then a review-word. Also accept "(N)" fallback.
+  // total-count regex: a contiguous number (with optional thousand separators
+  // — period, comma, or non-breaking space), then an optional space, then a
+  // review-word. The character class deliberately excludes \s to prevent the
+  // match from spanning multiple numbers on the page (e.g. histogram counts).
   const TOTAL_REGEX = new RegExp(
-    `([\\d.,\\s\\u00a0]+?)\\s*(?:${REVIEW_WORDS_ALT})`,
-    "i"
+    `(\\d[\\d.,\\u00a0]{0,15})\\s{0,3}(?:${REVIEW_WORDS_ALT})`,
+    "gi"
   );
-  const TOTAL_PAREN_REGEX = /\(([\d.,\s\u00a0]+)\)/;
+  const TOTAL_PAREN_REGEX = /\((\d[\d.,\u00a0]{0,15})\)/;
 
   // Range: two numbers separated by 1-6 non-digit chars (handles
   // "11 to 20", "11 bis 20", "11 έως 20", "11-20", "11 a 20", "11 à 20",
@@ -162,23 +164,21 @@
   function parseTotal(text) {
     // Find ALL "N review-word" matches and pick the largest — Google caps the
     // removal range at 250, but a business with a defamation banner typically
-    // has thousands of real reviews. Picking the largest avoids grabbing
-    // numbers from inside the banner itself (e.g. "11 to 20 αξιολογήσεις").
-    const globalRegex = new RegExp(
-      `([\\d.,\\s\\u00a0]+?)\\s*(?:${REVIEW_WORDS_ALT})`,
-      "gi"
-    );
+    // has hundreds to thousands of real reviews, so the real total is the
+    // biggest "N word" match in the rating section. Picking the largest also
+    // skips the banner's own "11 to 20 αξιολογήσεις" (20 < real total).
+    TOTAL_REGEX.lastIndex = 0;
     let best = 0;
     let m;
-    while ((m = globalRegex.exec(text)) !== null) {
-      const raw = m[1].replace(/[\s\u00a0.,]/g, "");
+    while ((m = TOTAL_REGEX.exec(text)) !== null) {
+      const raw = m[1].replace(/[\u00a0.,]/g, "");
       const n = parseInt(raw, 10);
       if (Number.isFinite(n) && n > best) best = n;
     }
     if (best > 0) return best;
     const paren = text.match(TOTAL_PAREN_REGEX);
     if (paren) {
-      const raw = paren[1].replace(/[\s\u00a0.,]/g, "");
+      const raw = paren[1].replace(/[\u00a0.,]/g, "");
       const n = parseInt(raw, 10);
       if (Number.isFinite(n) && n > 0) return n;
     }

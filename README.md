@@ -7,6 +7,7 @@ A tiny Chrome extension that shows you the **real** rating of a business on Goog
 </p>
 
 <p align="center">
+  <a href="https://chromewebstore.google.com/detail/fair-rating-%E2%80%94-german-revi/fpmekdnlhkcldbheplomiehpgpondgpn"><strong>Install from Chrome Web Store</strong></a> ·
   <a href="https://ennui92.github.io/fair-rating-extension/">Website</a> ·
   <a href="https://ennui92.github.io/fair-rating-extension/privacy.html">Privacy policy</a> ·
   <a href="https://github.com/Ennui92/fair-rating-extension/issues">Report an issue</a>
@@ -24,9 +25,17 @@ Works on Google Maps in ~20 languages — English, German, Greek, Spanish, Frenc
 
 ---
 
-## Install (for people who've never installed a Chrome extension manually)
+## Install
 
-We're working on getting this into the Chrome Web Store so you can install it in one click. Until then, it takes ~60 seconds to install manually:
+### Recommended: Chrome Web Store
+
+[**Add to Chrome — free**](https://chromewebstore.google.com/detail/fair-rating-%E2%80%94-german-revi/fpmekdnlhkcldbheplomiehpgpondgpn)
+
+One click. Works on Chrome, Brave, Edge, Arc and any Chromium-based browser.
+
+### Manual install (if you prefer to load from source)
+
+For people who've never installed a Chrome extension manually, it takes ~60 seconds:
 
 ### 1. Download this project
 
@@ -102,7 +111,7 @@ Google caps the disclosed range. When the notice shows the top bucket, the upper
 
 ## Roadmap
 
-- [ ] Chrome Web Store listing (submitted, awaiting review)
+- [x] Chrome Web Store listing — [live](https://chromewebstore.google.com/detail/fair-rating-%E2%80%94-german-revi/fpmekdnlhkcldbheplomiehpgpondgpn)
 - [ ] Firefox version
 - [ ] Optional inline display (next to the big rating number instead of a separate card)
 - [ ] User-tunable multiplier for historical removals

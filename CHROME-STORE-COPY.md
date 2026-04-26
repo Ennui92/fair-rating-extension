@@ -47,7 +47,7 @@ The code is open source. Every line is available to inspect at github.com/Ennui9
 
 CREDITS
 
-The idea was proposed by u/LiamPolygami on r/berlin, in a thread discussing Google's new defamation-removal disclosure. Built by Yet Another Expat, a podcast about life abroad.
+The idea was proposed by u/LiamPolygami on r/berlin, in a thread discussing Google's new defamation-removal disclosure.
 ```
 
 ---

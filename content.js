@@ -275,7 +275,7 @@
       <div class="fair-rating-foot">
         <span>Idea by <a href="https://www.reddit.com/user/LiamPolygami/" target="_blank" rel="noopener noreferrer">u/LiamPolygami</a> on r/berlin</span>
         <span class="fair-rating-dot">·</span>
-        <span>Built by <a href="https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD" target="_blank" rel="noopener noreferrer">Yet Another Expat</a></span>
+        <span>Built by <a href="https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD" target="_blank" rel="noopener noreferrer">Author</a></span>
         <span class="fair-rating-dot">·</span>
         <span>Worst-case estimate</span>
       </div>

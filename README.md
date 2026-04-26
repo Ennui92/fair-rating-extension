@@ -105,7 +105,7 @@ Google caps the disclosed range. When the notice shows the top bucket, the upper
 ## Credits
 
 - **Idea**: [u/LiamPolygami](https://www.reddit.com/user/LiamPolygami/) in a [r/berlin thread](https://www.reddit.com/r/berlin/) about Google's new defamation-removal disclosure — *"Someone needs to create an extension that adds 0 ratings for every removed rating and then averages that with the provided rating."*
-- **Built by**: [Yet Another Expat](https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD) — a podcast about life abroad.
+- **Built by**: [Author](https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD)
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Fair Rating — German Review Removal Adjuster",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "On Google Maps (Germany), recalculates a business's rating by counting removed-for-defamation reviews as low-star ratings.",
   "permissions": ["storage"],
   "action": {

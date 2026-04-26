@@ -280,11 +280,35 @@
     return n.toFixed(2);
   }
 
-  function buildBadge(ctx, removed, adjusted) {
-    const badge = document.createElement("div");
-    badge.setAttribute(BADGE_ATTR, "1");
-    badge.className = "fair-rating-badge";
+  // Tiny DOM helper: builds an element with attributes and children. Used
+  // instead of innerHTML so AMO's "Unsafe assignment to innerHTML" linter
+  // is satisfied — every value is set via textContent / setAttribute.
+  function el(tag, attrs, ...kids) {
+    const node = document.createElement(tag);
+    if (attrs) {
+      for (const [k, v] of Object.entries(attrs)) {
+        if (v == null) continue;
+        if (k === "class") node.className = v;
+        else if (k === "text") node.textContent = v;
+        else node.setAttribute(k, v);
+      }
+    }
+    for (const k of kids) {
+      if (k == null) continue;
+      node.appendChild(typeof k === "string" ? document.createTextNode(k) : k);
+    }
+    return node;
+  }
 
+  function extLink(href, text) {
+    return el(
+      "a",
+      { href, target: "_blank", rel: "noopener noreferrer" },
+      text
+    );
+  }
+
+  function buildBadge(ctx, removed, adjusted) {
     const sameLowHigh = Math.abs(adjusted.low - adjusted.high) < 0.005;
     const valueText = sameLowHigh
       ? fmt(adjusted.low)
@@ -308,29 +332,67 @@
       ? `${removed.lo}`
       : `${removed.lo}–${removed.hi}`;
 
-    badge.innerHTML = `
-      <div class="fair-rating-header">
-        <span class="fair-rating-pill">Adjusted rating</span>
-      </div>
-      <div class="fair-rating-value-row">
-        <span class="fair-rating-value">${valueText}</span>
-        <span class="fair-rating-star">★</span>
-        <span class="fair-rating-delta">${deltaText}</span>
-      </div>
-      <div class="fair-rating-sub">
-        If the ${removedLabel} removed review${removed.hi === 1 ? "" : "s"} had
-        been left up as ${starWord}s, this business's rating would drop from
-        <b>${fmtOrig(ctx.rating)}</b> to roughly
-        <b>${valueText}</b>.
-      </div>
-      <div class="fair-rating-foot">
-        <span>Idea by <a href="https://www.reddit.com/user/LiamPolygami/" target="_blank" rel="noopener noreferrer">u/LiamPolygami</a> on r/berlin</span>
-        <span class="fair-rating-dot">·</span>
-        <span>Built by <a href="https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD" target="_blank" rel="noopener noreferrer">About me</a></span>
-        <span class="fair-rating-dot">·</span>
-        <a href="https://github.com/Ennui92/fair-rating-extension/issues/new?title=Feedback&body=Where%20you%20saw%20this%20%28business%20name%20or%20URL%29%3A%0A%0AWhat%20happened%3A%0A%0AScreenshot%20%28optional%29%3A" target="_blank" rel="noopener noreferrer">Send feedback</a>
-      </div>
-    `;
+    const ratingBold = el("b", { text: fmtOrig(ctx.rating) });
+    const valueBold = el("b", { text: valueText });
+
+    const FEEDBACK_URL =
+      "https://github.com/Ennui92/fair-rating-extension/issues/new" +
+      "?title=Feedback" +
+      "&body=Where%20you%20saw%20this%20%28business%20name%20or%20URL%29%3A" +
+      "%0A%0AWhat%20happened%3A%0A%0AScreenshot%20%28optional%29%3A";
+
+    const badge = el(
+      "div",
+      { class: "fair-rating-badge" },
+      el(
+        "div",
+        { class: "fair-rating-header" },
+        el("span", { class: "fair-rating-pill", text: "Adjusted rating" })
+      ),
+      el(
+        "div",
+        { class: "fair-rating-value-row" },
+        el("span", { class: "fair-rating-value", text: valueText }),
+        el("span", { class: "fair-rating-star", text: "★" }),
+        el("span", { class: "fair-rating-delta", text: deltaText })
+      ),
+      el(
+        "div",
+        { class: "fair-rating-sub" },
+        `If the ${removedLabel} removed review${removed.hi === 1 ? "" : "s"} had been left up as ${starWord}s, this business's rating would drop from `,
+        ratingBold,
+        " to roughly ",
+        valueBold,
+        "."
+      ),
+      el(
+        "div",
+        { class: "fair-rating-foot" },
+        el(
+          "span",
+          null,
+          "Idea by ",
+          extLink(
+            "https://www.reddit.com/user/LiamPolygami/",
+            "u/LiamPolygami"
+          ),
+          " on r/berlin"
+        ),
+        el("span", { class: "fair-rating-dot", text: "·" }),
+        el(
+          "span",
+          null,
+          "Built by ",
+          extLink(
+            "https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD",
+            "About me"
+          )
+        ),
+        el("span", { class: "fair-rating-dot", text: "·" }),
+        extLink(FEEDBACK_URL, "Send feedback")
+      )
+    );
+    badge.setAttribute(BADGE_ATTR, "1");
     return badge;
   }
 

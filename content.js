@@ -192,17 +192,27 @@
 
   function findRatingContext(bannerEl) {
     // Climb up looking for an ancestor that also contains the numeric rating
-    // (e.g. "4.7" / "4,8") and the total review count.
+    // (e.g. "4.7" / "4,8") and the total review count. Pick the LARGEST valid
+    // rating found in the smallest matching ancestor — review-count buckets
+    // like "1.0K" used to win because they appeared first in the text.
     let el = bannerEl.parentElement;
+    // Lookahead (?!\w) ensures the next char is NOT a word character (letter
+    // or digit), so "1.0K" no longer matches (K is \w).
+    const ratingPattern = /(?:^|[\s>(])([1-5][.,]\d)(?!\w)/g;
     for (let i = 0; i < 14 && el; i++, el = el.parentElement) {
       const text = el.innerText || "";
-      const ratingMatch = text.match(/(^|[\s>])([1-5][.,]\d)(?=\s|$|[^\d])/);
-      if (!ratingMatch) continue;
+      ratingPattern.lastIndex = 0;
+      let bestRating = 0;
+      let m;
+      while ((m = ratingPattern.exec(text)) !== null) {
+        const r = parseFloat(m[1].replace(",", "."));
+        if (r >= 1 && r <= 5 && r > bestRating) bestRating = r;
+      }
+      if (!bestRating) continue;
       const total = parseTotal(text);
       if (!total) continue;
-      const rating = parseFloat(ratingMatch[2].replace(",", "."));
-      if (rating >= 1 && rating <= 5 && total > 0) {
-        return { container: el, rating, total };
+      if (bestRating >= 1 && bestRating <= 5 && total > 0) {
+        return { container: el, rating: bestRating, total };
       }
     }
     return null;
@@ -275,9 +285,9 @@
       <div class="fair-rating-foot">
         <span>Idea by <a href="https://www.reddit.com/user/LiamPolygami/" target="_blank" rel="noopener noreferrer">u/LiamPolygami</a> on r/berlin</span>
         <span class="fair-rating-dot">·</span>
-        <span>Built by <a href="https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD" target="_blank" rel="noopener noreferrer">Author</a></span>
+        <span>Built by <a href="https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD" target="_blank" rel="noopener noreferrer">About me</a></span>
         <span class="fair-rating-dot">·</span>
-        <span>Worst-case estimate</span>
+        <a href="https://github.com/Ennui92/fair-rating-extension/issues/new?title=Feedback&body=Where%20you%20saw%20this%20%28business%20name%20or%20URL%29%3A%0A%0AWhat%20happened%3A%0A%0AScreenshot%20%28optional%29%3A" target="_blank" rel="noopener noreferrer">Send feedback</a>
       </div>
     `;
     return badge;

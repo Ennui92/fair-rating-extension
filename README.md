@@ -105,16 +105,17 @@ Google caps the disclosed range. When the notice shows the top bucket, the upper
 ## Credits
 
 - **Idea**: [u/LiamPolygami](https://www.reddit.com/user/LiamPolygami/) in a [r/berlin thread](https://www.reddit.com/r/berlin/) about Google's new defamation-removal disclosure — *"Someone needs to create an extension that adds 0 ratings for every removed rating and then averages that with the provided rating."*
-- **Built by**: [Author](https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD)
+- **Built by**: [About me](https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD)
 
 ---
 
 ## Roadmap
 
 - [x] Chrome Web Store listing — [live](https://chromewebstore.google.com/detail/fair-rating-%E2%80%94-german-revi/fpmekdnlhkcldbheplomiehpgpondgpn)
-- [x] Firefox compatibility — manifest supports Firefox 109+; AMO listing pending submission
+- [ ] Firefox version — code is compatible (Firefox 109+); AMO listing not yet submitted
+- [ ] Mobile (Google Maps app) — not currently possible from a browser extension; the Maps mobile app does not load extensions. Mental shortcut for now: subtract roughly 0.25 to 0.5 stars from any business displaying the defamation-removal notice in the app.
 - [ ] Optional inline display (next to the big rating number instead of a separate card)
-- [ ] User-tunable multiplier for historical removals
+- [ ] User-tunable multiplier for historical removals (Google only counts last 365 days)
 
 ---
 

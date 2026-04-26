@@ -167,7 +167,7 @@ const screenshot = `
       <text x="20" y="112" font-family="Google Sans, Roboto, Arial, sans-serif" font-size="13" fill="#334155">If the 11–20 removed reviews had been left up as 1-stars, this business's rating</text>
       <text x="20" y="130" font-family="Google Sans, Roboto, Arial, sans-serif" font-size="13" fill="#334155">would drop from <tspan font-weight="700" fill="#0f172a">4.8</tspan> to roughly <tspan font-weight="700" fill="#0f172a">4.6–4.7</tspan>.</text>
       <line x1="16" y1="148" x2="640" y2="148" stroke="#fde68a" stroke-width="1"/>
-      <text x="20" y="166" font-family="Google Sans, Roboto, Arial, sans-serif" font-size="11" fill="#64748b">Idea by u/LiamPolygami on r/berlin · Built by Author · Worst-case estimate</text>
+      <text x="20" y="166" font-family="Google Sans, Roboto, Arial, sans-serif" font-size="11" fill="#64748b">Idea by u/LiamPolygami on r/berlin · Built by About me · Worst-case estimate</text>
     </g>
   </g>
   <!-- Callout -->

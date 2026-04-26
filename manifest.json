@@ -2,6 +2,12 @@
   "manifest_version": 3,
   "name": "Fair Rating — German Review Removal Adjuster",
   "version": "1.0.1",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "fair-rating@ennui92.github.io",
+      "strict_min_version": "109.0"
+    }
+  },
   "description": "On Google Maps (Germany), recalculates a business's rating by counting removed-for-defamation reviews as low-star ratings.",
   "permissions": ["storage"],
   "action": {

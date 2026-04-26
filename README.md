@@ -112,7 +112,7 @@ Google caps the disclosed range. When the notice shows the top bucket, the upper
 ## Roadmap
 
 - [x] Chrome Web Store listing — [live](https://chromewebstore.google.com/detail/fair-rating-%E2%80%94-german-revi/fpmekdnlhkcldbheplomiehpgpondgpn)
-- [ ] Firefox version
+- [x] Firefox compatibility — manifest supports Firefox 109+; AMO listing pending submission
 - [ ] Optional inline display (next to the big rating number instead of a separate card)
 - [ ] User-tunable multiplier for historical removals
 

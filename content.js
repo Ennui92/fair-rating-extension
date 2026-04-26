@@ -66,11 +66,27 @@
   // — period, comma, or non-breaking space), then an optional space, then a
   // review-word. The character class deliberately excludes \s to prevent the
   // match from spanning multiple numbers on the page (e.g. histogram counts).
+  // Allow an optional thousand/million suffix between the number and the
+  // review-word (Capvin's "1,6K \u03b1\u03be\u03b9\u03bf\u03bb\u03bf\u03b3\u03ae\u03c3\u03b5\u03b9\u03c2" / Greek "\u03c7\u03b9\u03bb." etc.).
+  const SUFFIX_PATTERN = "(?:[KkMm]|\u03c7\u03b9\u03bb\\.?|\u03c7\u03b9\u03bb\u03b9\u03ac\u03b4\\w*|\u0442\u044b\u0441\\.?|\u0442\u0438\u0441\\.?|mln|\u043c\u043b\u043d)?";
   const TOTAL_REGEX = new RegExp(
-    `(\\d[\\d.,\\u00a0]{0,15})\\s{0,3}(?:${REVIEW_WORDS_ALT})`,
-    "gi"
+    `(\\d[\\d.,\\u00a0]{0,15})\\s*${SUFFIX_PATTERN}\\s{0,3}(?:${REVIEW_WORDS_ALT})`,
+    "giu"
   );
   const TOTAL_PAREN_REGEX = /\((\d[\d.,\u00a0]{0,15})\)/;
+  // Locale-aware number parser: distinguishes decimal mark (1,6) from
+  // thousand separators (1.234) by looking at the trailing fragment length.
+  function parseLocaleNumber(s) {
+    s = s.replace(/[\s\u00a0]/g, "");
+    const decMatch = s.match(/^(.*)([.,])(\d{1,2})$/);
+    if (decMatch) {
+      const intPart = decMatch[1].replace(/[.,]/g, "");
+      return parseFloat((intPart || "0") + "." + decMatch[3]);
+    }
+    return parseInt(s.replace(/[.,]/g, ""), 10);
+  }
+  const SUFFIX_K_RE = /^(?:[Kk]|\u03c7\u03b9\u03bb\.?|\u03c7\u03b9\u03bb\u03b9\u03ac\u03b4\w*|\u0442\u044b\u0441\.?|\u0442\u0438\u0441\.?)$/u;
+  const SUFFIX_M_RE = /^(?:[Mm]|mln|\u043c\u043b\u043d)$/u;
 
   // Range: two numbers separated by 1-6 non-digit chars (handles
   // "11 to 20", "11 bis 20", "11 έως 20", "11-20", "11 a 20", "11 à 20",
@@ -176,46 +192,71 @@
     let best = 0;
     let m;
     while ((m = TOTAL_REGEX.exec(text)) !== null) {
-      const raw = m[1].replace(/[\u00a0.,]/g, "");
-      const n = parseInt(raw, 10);
-      if (Number.isFinite(n) && n > best) best = n;
+      const fullMatch = m[0];
+      const numStr = m[1];
+      const tail = fullMatch.slice(numStr.length).replace(/^[\s\u00a0]+/, "");
+      let n = parseLocaleNumber(numStr);
+      if (!Number.isFinite(n)) continue;
+      const suffixTok = (tail.split(/[\s\u00a0]+/)[0] || "");
+      if (SUFFIX_K_RE.test(suffixTok)) n = Math.round(n * 1000);
+      else if (SUFFIX_M_RE.test(suffixTok)) n = Math.round(n * 1000000);
+      if (n > best) best = n;
     }
     if (best > 0) return best;
     const paren = text.match(TOTAL_PAREN_REGEX);
     if (paren) {
-      const raw = paren[1].replace(/[\u00a0.,]/g, "");
-      const n = parseInt(raw, 10);
+      const n = parseLocaleNumber(paren[1]);
       if (Number.isFinite(n) && n > 0) return n;
     }
     return null;
   }
 
+  // Lookahead (?![\d\p{L}]) rejects ANY following letter (in any script,
+  // including Greek χ for "1,0χιλ.") and any digit (so "1.319" doesn't match
+  // as "1.3"). Without /u flag, \w only covers ASCII letters and Greek
+  // thousand-suffixes like "χιλ" would sneak through.
+  const RATING_PATTERN = /(?:^|[\s>(])([1-5][.,]\d)(?![\d\p{L}])/gu;
+
+  function bestRatingIn(text) {
+    RATING_PATTERN.lastIndex = 0;
+    let best = 0;
+    let m;
+    while ((m = RATING_PATTERN.exec(text)) !== null) {
+      const r = parseFloat(m[1].replace(",", "."));
+      if (r >= 1 && r <= 5 && r > best) best = r;
+    }
+    return best;
+  }
+
   function findRatingContext(bannerEl) {
-    // Climb up looking for an ancestor that also contains the numeric rating
-    // (e.g. "4.7" / "4,8") and the total review count. Pick the LARGEST valid
-    // rating found in the smallest matching ancestor — review-count buckets
-    // like "1.0K" used to win because they appeared first in the text.
+    // Walk up the DOM accumulating all (rating, total) candidates, then
+    // pick the pair with the LARGEST rating. This avoids being trapped in
+    // a small ancestor (e.g. the histogram alone) whose largest rating is
+    // a histogram artifact like 1.0/5; the real headline rating lives in
+    // a wider ancestor and is the largest valid match anywhere on the page.
+    const candidates = [];
     let el = bannerEl.parentElement;
-    // Lookahead (?!\w) ensures the next char is NOT a word character (letter
-    // or digit), so "1.0K" no longer matches (K is \w).
-    const ratingPattern = /(?:^|[\s>(])([1-5][.,]\d)(?!\w)/g;
-    for (let i = 0; i < 14 && el; i++, el = el.parentElement) {
+    for (let i = 0; i < 20 && el; i++, el = el.parentElement) {
       const text = el.innerText || "";
-      ratingPattern.lastIndex = 0;
-      let bestRating = 0;
-      let m;
-      while ((m = ratingPattern.exec(text)) !== null) {
-        const r = parseFloat(m[1].replace(",", "."));
-        if (r >= 1 && r <= 5 && r > bestRating) bestRating = r;
-      }
-      if (!bestRating) continue;
+      const rating = bestRatingIn(text);
+      if (!rating) continue;
       const total = parseTotal(text);
       if (!total) continue;
-      if (bestRating >= 1 && bestRating <= 5 && total > 0) {
-        return { container: el, rating: bestRating, total };
-      }
+      candidates.push({ container: el, rating, total });
     }
-    return null;
+    if (candidates.length === 0) {
+      // Last-ditch fallback: scan the whole page.
+      const text = document.body?.innerText || "";
+      const rating = bestRatingIn(text);
+      const total = rating ? parseTotal(text) : null;
+      if (rating && total) {
+        return { container: document.body, rating, total };
+      }
+      return null;
+    }
+    // Highest rating wins; on ties, take the one with the largest total.
+    candidates.sort((a, b) => b.rating - a.rating || b.total - a.total);
+    return candidates[0];
   }
 
   function computeAdjusted(rating, total, removedLo, removedHi, assumedStar) {

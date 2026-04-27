@@ -52,7 +52,23 @@
     </section>
 
     <section class="settings">
-      <label class="settings-label" for="assumedStar">
+      <label class="settings-label" for="removalYears">
+        How long the business has been on Maps
+      </label>
+      <select id="removalYears" class="settings-select">
+        <option value="1">1 year (no extrapolation)</option>
+        <option value="2">2 years</option>
+        <option value="3">3 years (typical, default)</option>
+        <option value="5">5 years (long-established)</option>
+        <option value="10">10 years (very old)</option>
+      </select>
+      <p class="settings-hint">
+        Google only discloses removals from the last 365 days. We multiply
+        by this to estimate the lifetime impact. We auto-detect from the
+        oldest visible review when possible — this is the fallback.
+      </p>
+
+      <label class="settings-label" for="assumedStar" style="margin-top:14px">
         Count each removed review as
       </label>
       <select id="assumedStar" class="settings-select">

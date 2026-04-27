@@ -2,6 +2,18 @@
 
 All notable changes to Fair Rating. Newest first.
 
+## [1.0.7] — 2026-04-28
+
+### Added
+- **Historical-removal multiplier.** Google's defamation-removal disclosure only counts the last 365 days, so a business that's been gaming the system for years was systematically under-reported. The badge now extrapolates over the business's estimated time on Maps:
+  - **Auto-detection**: parses the largest "X years ago" / "vor X Jahren" / "πριν από X χρόνια" / etc. (~14 languages) from review timestamps on the page, treats it as a floor on business age.
+  - **Manual fallback**: a new "How long the business has been on Maps" dropdown in the popup (default **3 years**, options 1/2/3/5/10).
+  - The larger of (auto-detected, setting) wins. The badge labels its source: "over **5 years** (oldest visible review)" or "over **3 years** (your setting)".
+- The pre-filled feedback issue body now includes `removal_years`, `detected_years`, and `setting_years` so we can debug multiplier logic without back-and-forth.
+
+### Changed
+- **Behaviour change for existing users**: the default of 3 years means most businesses with a defamation banner now produce a noticeably bigger drop than at v1.0.6. Set the popup's "How long..." dropdown to `1 year (no extrapolation)` to restore the v1.0.6 math (auto-detection still applies on top).
+
 ## [1.0.6] — 2026-04-27
 
 ### Fixed
@@ -61,6 +73,7 @@ All notable changes to Fair Rating. Newest first.
 - Configurable assumed-star setting (0/1/2/3 stars per removed review).
 - Works on `google.com/maps`, `google.de/maps`, and Google Search results.
 
+[1.0.7]: https://github.com/Ennui92/fair-rating-extension/releases/tag/v1.0.7
 [1.0.6]: https://github.com/Ennui92/fair-rating-extension/releases/tag/v1.0.6
 [1.0.5]: https://github.com/Ennui92/fair-rating-extension/releases/tag/v1.0.5
 [1.0.4]: https://github.com/Ennui92/fair-rating-extension/releases/tag/v1.0.4

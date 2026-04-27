@@ -1,10 +1,21 @@
-const select = document.getElementById("assumedStar");
+const assumedStar = document.getElementById("assumedStar");
+const removalYears = document.getElementById("removalYears");
 
-chrome.storage.sync.get({ assumedStar: 1 }, (stored) => {
-  select.value = String(stored.assumedStar);
+chrome.storage.sync.get({ assumedStar: 1, removalYears: 3 }, (stored) => {
+  if (assumedStar) assumedStar.value = String(stored.assumedStar);
+  if (removalYears) removalYears.value = String(stored.removalYears);
 });
 
-select.addEventListener("change", () => {
-  const value = parseInt(select.value, 10);
-  chrome.storage.sync.set({ assumedStar: value });
-});
+if (assumedStar) {
+  assumedStar.addEventListener("change", () => {
+    const value = parseInt(assumedStar.value, 10);
+    chrome.storage.sync.set({ assumedStar: value });
+  });
+}
+
+if (removalYears) {
+  removalYears.addEventListener("change", () => {
+    const value = parseInt(removalYears.value, 10);
+    chrome.storage.sync.set({ removalYears: value });
+  });
+}

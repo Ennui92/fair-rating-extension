@@ -100,18 +100,97 @@
     .join("|");
   const DEFAMATION_REGEX = new RegExp(DEFAMATION_ALT, "i");
 
-  let settings = { assumedStar: 1 };
+  // Multilingual "X years ago" detection. Each pattern captures a digit run
+  // (or matches a singular-year phrase that we treat as 1). We scan
+  // document.body.innerText once per badge render and take the maximum
+  // captured value as a floor on the business's age on Maps. Used to
+  // extrapolate Google's 365-day removal disclosure to a lifetime estimate.
+  const YEAR_AGO_PATTERNS = [
+    // English
+    /(\d+)\s+years?\s+ago/giu,
+    /\b(?:a|an|one)\s+year\s+ago/giu,
+    // German
+    /vor\s+(\d+)\s+Jahren?/giu,
+    /vor\s+einem\s+Jahr/giu,
+    // Greek
+    /πριν\s+από\s+(\d+)\s+χρόνια?/giu,
+    /πριν\s+από\s+έναν?\s+χρόνο/giu,
+    // Spanish
+    /hace\s+(\d+)\s+años?/giu,
+    /hace\s+un\s+año/giu,
+    // French
+    /il\s+y\s+a\s+(\d+)\s+ans?/giu,
+    /il\s+y\s+a\s+un\s+an/giu,
+    // Italian
+    /(\d+)\s+anni\s+fa/giu,
+    /un\s+anno\s+fa/giu,
+    // Portuguese
+    /há\s+(\d+)\s+anos?/giu,
+    /há\s+um\s+ano/giu,
+    // Dutch
+    /(\d+)\s+jaar\s+geleden/giu,
+    /een\s+jaar\s+geleden/giu,
+    // Polish
+    /(\d+)\s+lat\s+temu/giu,
+    /(\d+)\s+lata\s+temu/giu,
+    /rok\s+temu/giu,
+    // Russian
+    /(\d+)\s+лет\s+назад/giu,
+    /(\d+)\s+года?\s+назад/giu,
+    // Turkish
+    /(\d+)\s+yıl\s+önce/giu,
+    // Swedish
+    /(\d+)\s+år\s+sedan/giu,
+    /för\s+(\d+)\s+år\s+sedan/giu,
+    // Czech
+    /před\s+(\d+)\s+lety/giu,
+    /před\s+rokem/giu,
+    // Hungarian
+    /(\d+)\s+éve/giu,
+    // Japanese / Chinese — "5年前"
+    /(\d+)\s*年前/g,
+  ];
+
+  function detectYearsOnMaps(text) {
+    if (!text) return 0;
+    let max = 0;
+    for (const pattern of YEAR_AGO_PATTERNS) {
+      pattern.lastIndex = 0;
+      let m;
+      while ((m = pattern.exec(text)) !== null) {
+        // Group 1 captures the digits when present; fallback to 1 for
+        // singular-year phrases ("a year ago", "vor einem Jahr").
+        const n = m[1] ? parseInt(m[1], 10) : 1;
+        if (Number.isFinite(n) && n >= 1 && n <= 50 && n > max) max = n;
+      }
+    }
+    return max;
+  }
+
+  let settings = { assumedStar: 1, removalYears: 3 };
 
   try {
-    chrome.storage?.sync?.get({ assumedStar: 1 }, (stored) => {
-      if (stored && typeof stored.assumedStar === "number") {
-        settings.assumedStar = stored.assumedStar;
+    chrome.storage?.sync?.get(
+      { assumedStar: 1, removalYears: 3 },
+      (stored) => {
+        if (stored && typeof stored.assumedStar === "number") {
+          settings.assumedStar = stored.assumedStar;
+        }
+        if (stored && typeof stored.removalYears === "number") {
+          settings.removalYears = stored.removalYears;
+        }
+        scheduleScan();
       }
-      scheduleScan();
-    });
+    );
     chrome.storage?.onChanged?.addListener((changes, area) => {
-      if (area === "sync" && changes.assumedStar) {
+      if (area !== "sync") return;
+      if (changes.assumedStar) {
         settings.assumedStar = changes.assumedStar.newValue;
+      }
+      if (changes.removalYears) {
+        settings.removalYears = changes.removalYears.newValue;
+      }
+      if (changes.assumedStar || changes.removalYears) {
         clearBadges();
         scheduleScan();
       }
@@ -340,12 +419,28 @@
         ? "0-star"
         : `${settings.assumedStar}-star`;
 
-    const displayHi = removed.effectiveHi ?? removed.hi;
-    const removedLabel = removed.capped
-      ? `${removed.lo}+ (extrapolated to ~${displayHi})`
-      : removed.lo === removed.hi
-      ? `${removed.lo}`
-      : `${removed.lo}–${removed.hi}`;
+    const years = removed.years || 1;
+    const yearsSource = removed.yearsSource || "";
+
+    // Build the "X removed reviews" phrase. When years === 1 we keep the
+    // original disclosed-year wording. When > 1, we show the multiplied
+    // estimate and label its source so the reader sees how we got there.
+    const effLo = removed.effectiveLo ?? removed.lo;
+    const effHi = removed.effectiveHi ?? removed.hi;
+    let removedLabel;
+    if (years > 1) {
+      const range =
+        Math.round(effLo) === Math.round(effHi)
+          ? `~${Math.round(effLo)}`
+          : `~${Math.round(effLo)}–${Math.round(effHi)}`;
+      removedLabel = `${range} reviews removed over ${years} years (${yearsSource})`;
+    } else if (removed.capped) {
+      removedLabel = `${removed.lo}+ removed reviews (extrapolated to ~${Math.round(effHi)})`;
+    } else if (removed.lo === removed.hi) {
+      removedLabel = `${removed.lo} removed review${removed.lo === 1 ? "" : "s"}`;
+    } else {
+      removedLabel = `${removed.lo}–${removed.hi} removed reviews`;
+    }
 
     const ratingBold = el("b", { text: fmtOrig(ctx.rating) });
     const valueBold = el("b", { text: valueText });
@@ -362,6 +457,7 @@
       "**What the extension shows**:",
       `- Adjusted: ${valueText}`,
       `- Says drop from ${fmtOrig(ctx.rating)} to roughly ${valueText}`,
+      `- Years used for extrapolation: ${years} (${yearsSource})`,
       "",
       "**Page URL**:",
       location.href.split("?")[0],
@@ -373,7 +469,7 @@
         "Please correct them if any look wrong, or paste a screenshot of the " +
         "actual page above this comment. -->",
       "",
-      `_Extension version: ${chrome.runtime?.getManifest?.()?.version || "unknown"}, assumed_star: ${settings.assumedStar}_`,
+      `_Extension version: ${chrome.runtime?.getManifest?.()?.version || "unknown"}, assumed_star: ${settings.assumedStar}, removal_years: ${years}, detected_years: ${removed.detectedYears || 0}, setting_years: ${removed.settingYears || settings.removalYears}_`,
     ].join("\n");
     const FEEDBACK_URL =
       "https://github.com/Ennui92/fair-rating-extension/issues/new" +
@@ -400,7 +496,7 @@
       el(
         "div",
         { class: "fair-rating-sub" },
-        `If the ${removedLabel} removed review${removed.hi === 1 ? "" : "s"} had been left up as ${starWord}s, this business's rating would drop from `,
+        `If the ${removedLabel} had been left up as ${starWord}s, this business's rating would drop from `,
         ratingBold,
         " to roughly ",
         valueBold,
@@ -449,19 +545,46 @@
 
     if (ctx.container.querySelector(`[${BADGE_ATTR}]`)) return;
 
-    // When the banner is capped ("more than 250"), scale the upper bound
-    // proportionally to the business's total reviews — the real count is
-    // unknown but likely larger on bigger businesses. Floor: 2× the cap.
-    let effectiveHi = removed.hi;
+    // When the banner is capped ("more than 250"), scale the disclosed-year
+    // upper bound proportionally to the business's total reviews. Floor: 2×
+    // the cap. This runs first; the year multiplier compounds on top.
+    let yearLow = removed.lo;
+    let yearHi = removed.hi;
     if (removed.capped) {
-      effectiveHi = Math.max(removed.lo * 2, Math.round(ctx.total * 0.05));
-      removed.effectiveHi = effectiveHi;
+      yearHi = Math.max(removed.lo * 2, Math.round(ctx.total * 0.05));
     }
+
+    // Detect oldest visible "X years ago" timestamp on the page (max across
+    // ~14 languages) and combine with the user's global setting. Whichever
+    // is larger wins — the page-detected age is a hard floor (the business
+    // is at least that old) and the user's setting is their best guess.
+    const detectedYears = detectYearsOnMaps(document.body?.innerText || "");
+    const settingYears = Math.max(1, settings.removalYears | 0);
+    const years = Math.max(detectedYears, settingYears);
+    const yearsSource =
+      detectedYears >= settingYears && detectedYears > 0
+        ? "oldest visible review"
+        : "your setting";
+
+    // Apply the multiplier with a sanity clamp: total removals shouldn't
+    // exceed 5× the visible review count even on a long-running offender.
+    const cap = Math.max(years, 1) * Math.max(yearHi, 1);
+    const clampedHi = Math.min(yearHi * years, ctx.total * 5);
+    const effectiveLo = Math.min(yearLow * years, ctx.total * 5);
+    const effectiveHi = clampedHi;
+
+    removed.effectiveLo = effectiveLo;
+    removed.effectiveHi = effectiveHi;
+    removed.years = years;
+    removed.detectedYears = detectedYears;
+    removed.settingYears = settingYears;
+    removed.yearsSource = yearsSource;
+    void cap; // reserved for future telemetry
 
     const adjusted = computeAdjusted(
       ctx.rating,
       ctx.total,
-      removed.lo,
+      effectiveLo,
       effectiveHi,
       settings.assumedStar
     );

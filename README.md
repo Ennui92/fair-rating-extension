@@ -116,7 +116,7 @@ Google caps the disclosed range. When the notice shows the top bucket, the upper
 - [x] Firefox version — submitted to AMO, currently under review (Firefox 140+ / Firefox for Android 142+)
 - [ ] Mobile (Google Maps app) — not currently possible from a browser extension; the Maps mobile app does not load extensions. Mental shortcut for app users: subtract roughly 0.25 to 0.5 stars from any business displaying the defamation-removal notice (per a Reddit reader's suggestion).
 - [ ] Optional inline display (next to the big rating number instead of a separate card)
-- [ ] User-tunable multiplier for historical removals (Google only counts last 365 days)
+- [x] User-tunable multiplier for historical removals — auto-detects from oldest visible review, with a global default in the popup (v1.0.7)
 
 See [CHANGELOG.md](CHANGELOG.md) for the version-by-version history.
 

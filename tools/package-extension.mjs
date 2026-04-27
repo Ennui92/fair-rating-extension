@@ -25,6 +25,7 @@ const FILES = [
   "popup.html",
   "popup.css",
   "popup.js",
+  "lib/parser.js",
 ];
 
 for (const rel of FILES) {

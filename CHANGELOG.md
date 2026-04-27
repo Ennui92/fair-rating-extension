@@ -2,6 +2,19 @@
 
 All notable changes to Fair Rating. Newest first.
 
+## [1.0.8] — 2026-04-28
+
+### Changed
+- **No more fake-default extrapolation.** v1.0.7 defaulted to "3 years" when the page didn't show year-level review timestamps. That was guesswork dressed up as precision. New default is **Auto-detect**: if the page has reviews aged in years, use the oldest as the multiplier; if not, **don't multiply** and show a one-line disclaimer explaining the math covers the last 365 days only. Manual overrides (1 / 2 / 3 / 5 / 10 years) still available in the popup for power users.
+- Detection coverage expanded: added `Jahr` (German singular without trailing letters), Korean (`년 전`), Danish/Norwegian (`for et år siden`), and tightened patterns that previously missed singular forms like `rok temu` and `год назад`.
+
+### Added
+- **`lib/parser.js`** — pure parsing module separated from DOM logic. Loaded as a content script before `content.js`. Importable from Node tests too.
+- **`tests/parser.test.mjs`** — 30-case test suite covering multilingual year detection, locale-aware number parsing, the Capvin and Nawab regression cases, and defamation-banner detection across 4+ languages. Run with `node --test tests/parser.test.mjs`.
+
+### Fixed
+- "vor 1 Jahr" (German singular) now correctly returns 1 year — was returning 0 due to a regex that required "Jahre"/"Jahren" suffix only.
+
 ## [1.0.7] — 2026-04-28
 
 ### Added
@@ -73,6 +86,7 @@ All notable changes to Fair Rating. Newest first.
 - Configurable assumed-star setting (0/1/2/3 stars per removed review).
 - Works on `google.com/maps`, `google.de/maps`, and Google Search results.
 
+[1.0.8]: https://github.com/Ennui92/fair-rating-extension/releases/tag/v1.0.8
 [1.0.7]: https://github.com/Ennui92/fair-rating-extension/releases/tag/v1.0.7
 [1.0.6]: https://github.com/Ennui92/fair-rating-extension/releases/tag/v1.0.6
 [1.0.5]: https://github.com/Ennui92/fair-rating-extension/releases/tag/v1.0.5

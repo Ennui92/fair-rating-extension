@@ -1,7 +1,7 @@
 const assumedStar = document.getElementById("assumedStar");
 const removalYears = document.getElementById("removalYears");
 
-chrome.storage.sync.get({ assumedStar: 1, removalYears: 3 }, (stored) => {
+chrome.storage.sync.get({ assumedStar: 1, removalYears: 0 }, (stored) => {
   if (assumedStar) assumedStar.value = String(stored.assumedStar);
   if (removalYears) removalYears.value = String(stored.removalYears);
 });

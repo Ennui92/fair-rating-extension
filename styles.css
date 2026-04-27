@@ -92,6 +92,16 @@
   font-weight: 600;
 }
 
+.fair-rating-badge .fair-rating-note {
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: #78350f;
+  background: #fef3c7;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
 .fair-rating-badge .fair-rating-foot {
   display: flex;
   flex-wrap: wrap;

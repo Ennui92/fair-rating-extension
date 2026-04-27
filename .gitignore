@@ -1,13 +1,55 @@
+# OS / editor cruft
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/
+.claude/
+
+# Build artifacts and dependencies
 node_modules/
 tools/node_modules/
 tools/package-lock.json
 *.zip
-.vscode/
-.idea/
-.claude/
+*.xpi
+*.crx
+
+# Media files — the project folder doubles as a working directory for
+# video/audio drafts. None of this belongs in git.
 *.mp4
 *.mov
 *.avi
 *.mkv
+*.webm
+*.m4v
+*.mpg
+*.mpeg
+*.mp3
+*.wav
+*.m4a
+*.flac
+*.ogg
+*.aac
+
+# Design / source files for promo work
+*.psd
+*.ai
+*.fig
+*.sketch
+*.xd
+*.aep
+*.prproj
+
+# Personal/local notes and copy docs that live in the working folder
+# but should not ship to the public repo
+CHROME-STORE-COPY.md
+NOTES.md
+SCRATCH.md
+SCRATCH-*.md
+TODO.md
+DRAFT*.md
+*.draft.md
+*.private.md
+notes/
+scratch/
+drafts/
+private/

@@ -338,3 +338,35 @@ h2 {
   color: #475569;
   margin: 0 6px;
 }
+
+/* More projects banner (between content and footer) */
+.more-projects {
+  padding: 24px 0;
+  background: #fef3c7;
+  border-top: 1px solid #fde68a;
+  border-bottom: 1px solid #fde68a;
+  text-align: center;
+}
+
+.more-projects p {
+  margin: 0;
+  font-size: 14px;
+  color: #78350f;
+  line-height: 1.6;
+}
+
+.more-projects a {
+  color: #78350f;
+  text-decoration: underline;
+  text-decoration-color: rgba(120, 53, 15, 0.35);
+  text-underline-offset: 3px;
+}
+
+.more-projects a:hover {
+  text-decoration-color: rgba(120, 53, 15, 0.9);
+}
+
+.more-projects .dot {
+  color: #b45309;
+  margin: 0 8px;
+}

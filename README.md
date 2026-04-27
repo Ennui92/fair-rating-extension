@@ -9,6 +9,7 @@ A tiny Chrome extension that shows you the **real** rating of a business on Goog
 <p align="center">
   <a href="https://chromewebstore.google.com/detail/fair-rating-%E2%80%94-german-revi/fpmekdnlhkcldbheplomiehpgpondgpn"><strong>Install from Chrome Web Store</strong></a> ·
   <a href="https://ennui92.github.io/fair-rating-extension/">Website</a> ·
+  <a href="CHANGELOG.md">Changelog</a> ·
   <a href="https://ennui92.github.io/fair-rating-extension/privacy.html">Privacy policy</a> ·
   <a href="https://github.com/Ennui92/fair-rating-extension/issues">Report an issue</a>
 </p>
@@ -116,6 +117,8 @@ Google caps the disclosed range. When the notice shows the top bucket, the upper
 - [ ] Mobile (Google Maps app) — not currently possible from a browser extension; the Maps mobile app does not load extensions. Mental shortcut for app users: subtract roughly 0.25 to 0.5 stars from any business displaying the defamation-removal notice (per a Reddit reader's suggestion).
 - [ ] Optional inline display (next to the big rating number instead of a separate card)
 - [ ] User-tunable multiplier for historical removals (Google only counts last 365 days)
+
+See [CHANGELOG.md](CHANGELOG.md) for the version-by-version history.
 
 ---
 

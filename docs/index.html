@@ -130,6 +130,55 @@
       </div>
     </section>
 
+    <section class="changelog">
+      <div class="wrap">
+        <h2>What's new</h2>
+        <ul class="cl-list">
+          <li>
+            <span class="cl-ver">v1.0.6</span>
+            <span class="cl-date">Apr 27, 2026</span>
+            <p>
+              Fixed: on pages with a "Similar places" panel, the badge sometimes picked a competitor's higher rating instead of the actual business's. Now picks the rating right above the defamation notice.
+              <br />Also: the Send feedback link now pre-fills GitHub issues with the parsed values + page URL.
+            </p>
+          </li>
+          <li>
+            <span class="cl-ver">v1.0.5</span>
+            <span class="cl-date">Apr 27, 2026</span>
+            <p>Firefox / AMO compliance: declared <code>data_collection_permissions: none</code> and bumped Firefox minimum to 140 to match.</p>
+          </li>
+          <li>
+            <span class="cl-ver">v1.0.4</span>
+            <span class="cl-date">Apr 26, 2026</span>
+            <p>Replaced <code>innerHTML</code> with safe DOM construction so AMO's linter is happy. No behaviour change.</p>
+          </li>
+          <li>
+            <span class="cl-ver">v1.0.3</span>
+            <span class="cl-date">Apr 26, 2026</span>
+            <p>Fixed Capvin-style misparse where the badge showed <strong>1.0</strong> on businesses with Greek/European-formatted review counts (<code>1,6χιλ</code>, <code>1.0K</code>). Unicode-aware regex + suffix multiplier.</p>
+          </li>
+          <li>
+            <span class="cl-ver">v1.0.2</span>
+            <span class="cl-date">Apr 26, 2026</span>
+            <p>Adjusted rating now floors to 1 decimal (never rounds up in the business's favour). For "more than 250 removed" capped banners, the upper bound is extrapolated proportionally to total reviews.</p>
+          </li>
+          <li>
+            <span class="cl-ver">v1.0.1</span>
+            <span class="cl-date">Apr 26, 2026</span>
+            <p>First Chrome Web Store release. Polished popup UI, full icon set, GitHub Pages site, privacy policy.</p>
+          </li>
+          <li>
+            <span class="cl-ver">v1.0.0</span>
+            <span class="cl-date">Apr 24, 2026</span>
+            <p>Initial release. Detects the defamation-removal notice in ~20 languages and shows an adjusted rating badge.</p>
+          </li>
+        </ul>
+        <p class="cl-foot">
+          Full version history in <a href="https://github.com/Ennui92/fair-rating-extension/blob/main/CHANGELOG.md">CHANGELOG.md</a>.
+        </p>
+      </div>
+    </section>
+
     <footer class="site-footer">
       <div class="wrap">
         <div class="foot-row">

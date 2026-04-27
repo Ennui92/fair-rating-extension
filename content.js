@@ -228,35 +228,50 @@
     return best;
   }
 
+  function pickRatingNearBanner(text, bannerSnippet) {
+    RATING_PATTERN.lastIndex = 0;
+    const ratings = [];
+    let m;
+    while ((m = RATING_PATTERN.exec(text)) !== null) {
+      const v = parseFloat(m[1].replace(",", "."));
+      if (v >= 1 && v <= 5) ratings.push({ value: v, index: m.index });
+    }
+    if (ratings.length === 0) return 0;
+    const bannerIdx = bannerSnippet ? text.indexOf(bannerSnippet) : -1;
+    if (bannerIdx < 0) return ratings[0].value;
+    // Prefer the LAST rating that appears before the banner — that's the
+    // headline of the same business. If none appear before (unusual), take
+    // the FIRST one after.
+    const before = ratings.filter((r) => r.index < bannerIdx);
+    if (before.length) return before[before.length - 1].value;
+    return ratings[0].value;
+  }
+
   function findRatingContext(bannerEl) {
-    // Walk up the DOM accumulating all (rating, total) candidates, then
-    // pick the pair with the LARGEST rating. This avoids being trapped in
-    // a small ancestor (e.g. the histogram alone) whose largest rating is
-    // a histogram artifact like 1.0/5; the real headline rating lives in
-    // a wider ancestor and is the largest valid match anywhere on the page.
-    const candidates = [];
+    // Walk up looking for the smallest ancestor that contains both the
+    // defamation banner and a rating-pattern. Within that ancestor, pick
+    // the rating CLOSEST to the banner (and ideally above it in the text)
+    // — that's the headline of the same business. Picking "largest rating
+    // anywhere" used to grab a competitor's 4.9 from a "Similar places"
+    // sidebar when the actual business was rated lower.
+    const bannerSnippet = ((bannerEl.innerText || "").trim().slice(0, 80)) || "";
     let el = bannerEl.parentElement;
     for (let i = 0; i < 20 && el; i++, el = el.parentElement) {
       const text = el.innerText || "";
-      const rating = bestRatingIn(text);
+      if (!text) continue;
+      const rating = pickRatingNearBanner(text, bannerSnippet);
       if (!rating) continue;
       const total = parseTotal(text);
       if (!total) continue;
-      candidates.push({ container: el, rating, total });
+      return { container: el, rating, total };
     }
-    if (candidates.length === 0) {
-      // Last-ditch fallback: scan the whole page.
-      const text = document.body?.innerText || "";
-      const rating = bestRatingIn(text);
-      const total = rating ? parseTotal(text) : null;
-      if (rating && total) {
-        return { container: document.body, rating, total };
-      }
-      return null;
-    }
-    // Highest rating wins; on ties, take the one with the largest total.
-    candidates.sort((a, b) => b.rating - a.rating || b.total - a.total);
-    return candidates[0];
+    // Last-ditch fallback: scan the whole page.
+    const text = document.body?.innerText || "";
+    const rating = pickRatingNearBanner(text, bannerSnippet);
+    if (!rating) return null;
+    const total = parseTotal(text);
+    if (!total) return null;
+    return { container: document.body, rating, total };
   }
 
   function computeAdjusted(rating, total, removedLo, removedHi, assumedStar) {
@@ -335,11 +350,37 @@
     const ratingBold = el("b", { text: fmtOrig(ctx.rating) });
     const valueBold = el("b", { text: valueText });
 
+    // Pre-fill the GitHub issue body with the parsed state and the page URL
+    // so we can reproduce bugs from a single click — no back-and-forth
+    // asking users for screenshots or DevTools snippets.
+    const feedbackBody = [
+      "**What I see on the page** (please confirm or correct):",
+      `- Star rating shown by Google: ${fmtOrig(ctx.rating)}`,
+      `- Total reviews shown by Google: ${ctx.total}`,
+      `- Removal notice range: ${removed.lo}${removed.lo === removed.hi ? "" : "–" + removed.hi}${removed.capped ? " (capped)" : ""}`,
+      "",
+      "**What the extension shows**:",
+      `- Adjusted: ${valueText}`,
+      `- Says drop from ${fmtOrig(ctx.rating)} to roughly ${valueText}`,
+      "",
+      "**Page URL**:",
+      location.href.split("?")[0],
+      "",
+      "**What I expected** (or what looks wrong):",
+      "",
+      "",
+      "<!-- The values above were detected automatically by the extension. " +
+        "Please correct them if any look wrong, or paste a screenshot of the " +
+        "actual page above this comment. -->",
+      "",
+      `_Extension version: ${chrome.runtime?.getManifest?.()?.version || "unknown"}, assumed_star: ${settings.assumedStar}_`,
+    ].join("\n");
     const FEEDBACK_URL =
       "https://github.com/Ennui92/fair-rating-extension/issues/new" +
-      "?title=Feedback" +
-      "&body=Where%20you%20saw%20this%20%28business%20name%20or%20URL%29%3A" +
-      "%0A%0AWhat%20happened%3A%0A%0AScreenshot%20%28optional%29%3A";
+      "?title=" +
+      encodeURIComponent("Feedback: rating mismatch") +
+      "&body=" +
+      encodeURIComponent(feedbackBody);
 
     const badge = el(
       "div",

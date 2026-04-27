@@ -6,3 +6,8 @@ tools/package-lock.json
 *.zip
 .vscode/
 .idea/
+.claude/
+*.mp4
+*.mov
+*.avi
+*.mkv

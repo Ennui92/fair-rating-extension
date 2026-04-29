@@ -306,7 +306,7 @@
           null,
           "Built by ",
           extLink(
-            "https://open.spotify.com/show/7ibAqCfRRWJmUiWIRyTeWD",
+            "https://ennui92.github.io/ermis-dev/",
             "About me"
           )
         ),

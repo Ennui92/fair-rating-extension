@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Fair Rating — German Review Removal Adjuster",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "browser_specific_settings": {
     "gecko": {
       "id": "fair-rating@ennui92.github.io",

@@ -2,6 +2,11 @@
 
 All notable changes to Fair Rating. Newest first.
 
+## [1.0.9] — 2026-04-29
+
+### Changed
+- "About me" link in the badge and popup now points to [ennui92.github.io/ermis-dev](https://ennui92.github.io/ermis-dev/) — the author's personal landing page, which lists this extension alongside other projects and podcasts. Previously linked directly to the Spotify podcast.
+
 ## [1.0.8] — 2026-04-28
 
 ### Changed
@@ -86,6 +91,7 @@ All notable changes to Fair Rating. Newest first.
 - Configurable assumed-star setting (0/1/2/3 stars per removed review).
 - Works on `google.com/maps`, `google.de/maps`, and Google Search results.
 
+[1.0.9]: https://github.com/Ennui92/fair-rating-extension/releases/tag/v1.0.9
 [1.0.8]: https://github.com/Ennui92/fair-rating-extension/releases/tag/v1.0.8
 [1.0.7]: https://github.com/Ennui92/fair-rating-extension/releases/tag/v1.0.7
 [1.0.6]: https://github.com/Ennui92/fair-rating-extension/releases/tag/v1.0.6

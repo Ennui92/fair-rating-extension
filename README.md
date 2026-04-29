@@ -7,7 +7,8 @@ A tiny Chrome extension that shows you the **real** rating of a business on Goog
 </p>
 
 <p align="center">
-  <a href="https://chromewebstore.google.com/detail/fair-rating-%E2%80%94-german-revi/fpmekdnlhkcldbheplomiehpgpondgpn"><strong>Install from Chrome Web Store</strong></a> ·
+  <a href="https://chromewebstore.google.com/detail/fair-rating-%E2%80%94-german-revi/fpmekdnlhkcldbheplomiehpgpondgpn"><strong>Install for Chrome</strong></a> ·
+  <a href="https://addons.mozilla.org/firefox/addon/fair-rating-german-reviews/"><strong>Install for Firefox</strong></a> ·
   <a href="https://ennui92.github.io/fair-rating-extension/">Website</a> ·
   <a href="CHANGELOG.md">Changelog</a> ·
   <a href="https://ennui92.github.io/fair-rating-extension/privacy.html">Privacy policy</a> ·
@@ -28,11 +29,12 @@ Works on Google Maps in ~20 languages — English, German, Greek, Spanish, Frenc
 
 ## Install
 
-### Recommended: Chrome Web Store
+### Recommended: install from your browser's store
 
-[**Add to Chrome — free**](https://chromewebstore.google.com/detail/fair-rating-%E2%80%94-german-revi/fpmekdnlhkcldbheplomiehpgpondgpn)
+- [**Add to Chrome — free**](https://chromewebstore.google.com/detail/fair-rating-%E2%80%94-german-revi/fpmekdnlhkcldbheplomiehpgpondgpn) (also works on Brave, Edge, Arc, and any other Chromium-based browser)
+- [**Add to Firefox — free**](https://addons.mozilla.org/firefox/addon/fair-rating-german-reviews/) (Firefox 140+ desktop, Firefox for Android 142+)
 
-One click. Works on Chrome, Brave, Edge, Arc and any Chromium-based browser.
+One click on either store.
 
 ### Manual install (if you prefer to load from source)
 
@@ -113,7 +115,7 @@ Google caps the disclosed range. When the notice shows the top bucket, the upper
 ## Roadmap
 
 - [x] Chrome Web Store listing — [live](https://chromewebstore.google.com/detail/fair-rating-%E2%80%94-german-revi/fpmekdnlhkcldbheplomiehpgpondgpn)
-- [x] Firefox version — submitted to AMO, currently under review (Firefox 140+ / Firefox for Android 142+)
+- [x] Firefox / AMO listing — [live](https://addons.mozilla.org/firefox/addon/fair-rating-german-reviews/) (Firefox 140+ / Firefox for Android 142+)
 - [ ] Mobile (Google Maps app) — not currently possible from a browser extension; the Maps mobile app does not load extensions. Mental shortcut for app users: subtract roughly 0.25 to 0.5 stars from any business displaying the defamation-removal notice (per a Reddit reader's suggestion).
 - [ ] Optional inline display (next to the big rating number instead of a separate card)
 - [x] User-tunable multiplier for historical removals — auto-detects from oldest visible review, with a global default in the popup (v1.0.7)
